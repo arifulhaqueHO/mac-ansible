@@ -13,7 +13,7 @@ Modular Ansible setup for macOS using roles.
 - starship
 - zoxide
 
-### Apps
+### Apps (manual website downloads)
 - Google Chrome
 - Visual Studio Code
 - Trillium
@@ -25,7 +25,7 @@ Modular Ansible setup for macOS using roles.
 
 - `/home/runner/work/mac-ansible/mac-ansible/site.yml` – main playbook
 - `/home/runner/work/mac-ansible/mac-ansible/roles/homebrew` – Homebrew formulae
-- `/home/runner/work/mac-ansible/mac-ansible/roles/apps` – GUI apps (casks)
+- `/home/runner/work/mac-ansible/mac-ansible/roles/apps` – GUI apps from manual website downloads
 - `/home/runner/work/mac-ansible/mac-ansible/roles/shell` – zsh/oh-my-zsh setup
 - `/home/runner/work/mac-ansible/mac-ansible/group_vars/all/packages.yml` – package/app lists
 
@@ -39,3 +39,8 @@ Modular Ansible setup for macOS using roles.
    ```bash
    ansible-playbook site.yml
    ```
+
+## Manual app source configuration
+
+Edit `/home/runner/work/mac-ansible/mac-ansible/group_vars/all/packages.yml` under `manual_apps` to keep each app's direct download URL current.
+App installation copies app bundles into `/Applications` and may require sudo privileges.

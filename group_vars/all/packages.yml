@@ -8,7 +8,19 @@ homebrew_formulae:
   - starship
   - zoxide
 
-mac_apps:
-  - google-chrome
-  - visual-studio-code
-  - trillium
+manual_apps:
+  - name: Google Chrome
+    installer_type: dmg
+    download_url: https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
+    archive_name: googlechrome.dmg
+    app_bundle: Google Chrome.app
+  - name: Visual Studio Code
+    installer_type: zip
+    download_url: https://update.code.visualstudio.com/latest/darwin-universal/stable
+    archive_name: vscode.zip
+    app_bundle: Visual Studio Code.app
+  - name: Trilium Notes
+    installer_type: dmg
+    download_url: https://github.com/zadam/trilium/releases/latest/download/trilium-mac.dmg
+    archive_name: trilium-mac.dmg
+    app_bundle: Trilium Notes.app

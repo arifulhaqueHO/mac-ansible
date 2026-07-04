@@ -1,0 +1,38 @@
+---
+- name: Validate app installer definition
+  ansible.builtin.assert:
+    that:
+      - item.name is defined
+      - item.installer_type is defined
+      - item.download_url is defined
+      - item.archive_name is defined
+      - item.app_bundle is defined
+      - item.installer_type in ['dmg', 'zip']
+    fail_msg: "Each manual app must define name, installer_type (dmg/zip), download_url, archive_name, and app_bundle."
+
+- name: Download installer from website
+  ansible.builtin.get_url:
+    url: "{{ item.download_url }}"
+    dest: "{{ apps_download_dir }}/{{ item.archive_name }}"
+    mode: "0644"
+
+- name: Install app from DMG
+  ansible.builtin.shell: |
+    set -euo pipefail
+    mount_point="$(hdiutil attach '{{ apps_download_dir }}/{{ item.archive_name }}' -nobrowse | awk 'END{print $3}')"
+    cp -R "$mount_point/{{ item.app_bundle }}" "{{ apps_install_dir }}/"
+    hdiutil detach "$mount_point"
+  args:
+    executable: /bin/bash
+    creates: "{{ apps_install_dir }}/{{ item.app_bundle }}"
+  become: "{{ apps_become }}"
+  when: item.installer_type == 'dmg'
+
+- name: Install app from ZIP
+  ansible.builtin.unarchive:
+    src: "{{ apps_download_dir }}/{{ item.archive_name }}"
+    dest: "{{ apps_install_dir }}"
+    remote_src: true
+    creates: "{{ apps_install_dir }}/{{ item.app_bundle }}"
+  become: "{{ apps_become }}"
+  when: item.installer_type == 'zip'

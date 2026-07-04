@@ -1,2 +1,5 @@
 ---
-mac_apps: []
+apps_download_dir: /tmp/mac-ansible-downloads
+apps_install_dir: /Applications
+apps_become: true
+manual_apps: []

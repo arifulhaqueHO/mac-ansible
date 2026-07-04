@@ -1,5 +1,12 @@
 ---
-- name: Ensure requested GUI apps are installed via Homebrew casks
-  community.general.homebrew_cask:
-    name: "{{ mac_apps }}"
-    state: present
+- name: Ensure manual app download directory exists
+  ansible.builtin.file:
+    path: "{{ apps_download_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Install manual apps from website downloads
+  ansible.builtin.include_tasks: install_app.yml
+  loop: "{{ manual_apps }}"
+  loop_control:
+    label: "{{ item.name }}"
