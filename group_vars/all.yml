@@ -1,0 +1,9 @@
+---
+homebrew_taps: []
+homebrew_packages: []
+manual_packages: []
+ssh_private_key: ""
+ssh_public_key: ""
+ssh_config: ""
+gpg_private_key: ""
+gpg_public_key: ""

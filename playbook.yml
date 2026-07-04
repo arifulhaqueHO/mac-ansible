@@ -1,0 +1,90 @@
+---
+- name: Configure macOS workstation
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  collections:
+    - community.general
+
+  tasks:
+    - name: Ensure host is macOS
+      ansible.builtin.assert:
+        that:
+          - ansible_system == "Darwin"
+        fail_msg: "This playbook only supports macOS hosts."
+
+    - name: Ensure Homebrew taps are present
+      community.general.homebrew_tap:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ homebrew_taps }}"
+
+    - name: Ensure Homebrew packages are installed
+      community.general.homebrew:
+        name: "{{ homebrew_packages }}"
+        state: present
+      when: homebrew_packages | length > 0
+
+    - name: Install manually managed packages
+      ansible.builtin.command: "{{ item.install_command }}"
+      args:
+        creates: "{{ item.creates | default(omit) }}"
+      loop: "{{ manual_packages }}"
+      when: item.install_command is defined
+
+    - name: Ensure .ssh directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.ssh"
+        state: directory
+        mode: "0700"
+
+    - name: Install SSH private key
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.ssh/id_ed25519"
+        content: "{{ ssh_private_key }}"
+        mode: "0600"
+      when: ssh_private_key | length > 0
+      no_log: true
+
+    - name: Install SSH public key
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.ssh/id_ed25519.pub"
+        content: "{{ ssh_public_key }}"
+        mode: "0644"
+      when: ssh_public_key | length > 0
+      no_log: true
+
+    - name: Install SSH config
+      ansible.builtin.copy:
+        dest: "{{ ansible_env.HOME }}/.ssh/config"
+        content: "{{ ssh_config }}"
+        mode: "0600"
+      when: ssh_config | length > 0
+
+    - name: Ensure .gnupg directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.gnupg"
+        state: directory
+        mode: "0700"
+
+    - name: Import GPG private key
+      ansible.builtin.command: gpg --batch --import
+      args:
+        stdin: "{{ gpg_private_key }}"
+      register: gpg_private_key_import
+      changed_when: >-
+        'imported' in (gpg_private_key_import.stdout | lower) or
+        'imported' in (gpg_private_key_import.stderr | lower)
+      when: gpg_private_key | length > 0
+      no_log: true
+
+    - name: Import GPG public key
+      ansible.builtin.command: gpg --batch --import
+      args:
+        stdin: "{{ gpg_public_key }}"
+      register: gpg_public_key_import
+      changed_when: >-
+        'imported' in (gpg_public_key_import.stdout | lower) or
+        'imported' in (gpg_public_key_import.stderr | lower)
+      when: gpg_public_key | length > 0
+      no_log: true
