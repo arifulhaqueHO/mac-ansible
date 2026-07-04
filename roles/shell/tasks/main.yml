@@ -1,0 +1,17 @@
+---
+- name: Ensure oh-my-zsh is installed
+  ansible.builtin.git:
+    repo: "{{ omz_repo }}"
+    dest: "{{ omz_dest }}"
+    version: master
+    update: false
+  when: omz_install | bool
+
+- name: Ensure default .zshrc exists for oh-my-zsh
+  ansible.builtin.copy:
+    src: "{{ omz_dest }}/templates/zshrc.zsh-template"
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    mode: "0644"
+    remote_src: true
+    force: false
+  when: omz_install | bool

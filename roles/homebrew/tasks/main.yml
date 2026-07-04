@@ -1,0 +1,14 @@
+---
+- name: Ensure Homebrew is installed
+  ansible.builtin.shell: |
+    if ! command -v brew >/dev/null 2>&1; then
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+- name: Ensure requested brew formulae are installed
+  community.general.homebrew:
+    name: "{{ homebrew_formulae }}"
+    state: present

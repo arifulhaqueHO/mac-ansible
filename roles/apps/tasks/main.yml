@@ -1,0 +1,5 @@
+---
+- name: Ensure requested GUI apps are installed via Homebrew casks
+  community.general.homebrew_cask:
+    name: "{{ mac_apps }}"
+    state: present

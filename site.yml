@@ -1,0 +1,10 @@
+---
+- name: Configure macOS workstation
+  hosts: mac
+  gather_facts: true
+  vars_files:
+    - group_vars/all/packages.yml
+  roles:
+    - role: homebrew
+    - role: shell
+    - role: apps

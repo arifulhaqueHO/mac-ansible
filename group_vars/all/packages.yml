@@ -1,0 +1,14 @@
+---
+homebrew_formulae:
+  - git
+  - lazygit
+  - lazydocker
+  - fzf
+  - zsh
+  - starship
+  - zoxide
+
+mac_apps:
+  - google-chrome
+  - visual-studio-code
+  - trillium

@@ -1,0 +1,5 @@
+---
+omz_install: true
+omz_repo: https://github.com/ohmyzsh/ohmyzsh.git
+omz_dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+omz_custom: "{{ omz_dest }}/custom"
