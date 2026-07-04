@@ -1,0 +1,29 @@
+name: Test Ansible Playbook
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  ansible-syntax-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Install required Ansible collections
+        run: ansible-galaxy collection install -r collections/requirements.yml
+
+      - name: Run playbook syntax check
+        run: ansible-playbook --syntax-check -i localhost, playbook.yml
