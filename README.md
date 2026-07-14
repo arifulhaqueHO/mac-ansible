@@ -35,7 +35,6 @@ Edit `/home/runner/work/mac-ansible/mac-ansible/roles/homebrew/defaults/main.yml
 - `homebrew_formulae` for grouped CLI packages
 - `homebrew_casks` for grouped GUI applications
 - `homebrew_taps` for additional taps
-- `homebrew_mas_apps` for Mac App Store applications
 
 ## Running the playbook directly
 
@@ -59,4 +58,3 @@ GitHub Actions runs automated validation for pull requests and pushes to `main`:
 
 - The playbook is designed for `localhost` and uses a local connection.
 - Some bootstrap steps require administrator privileges.
-- Mac App Store installs require the user to already be signed in to the App Store.

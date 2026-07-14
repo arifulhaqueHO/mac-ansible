@@ -111,9 +111,3 @@ homebrew_casks:
     - vagrant
   fonts:
     - font-hack-nerd-font
-
-homebrew_mas_apps: []
-# Example:
-# homebrew_mas_apps:
-#   - id: 497799835
-#     name: Xcode
