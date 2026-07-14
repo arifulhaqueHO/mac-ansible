@@ -44,3 +44,11 @@ jobs:
 
       - name: Check playbook syntax
         run: ansible-playbook --syntax-check site.yml
+
+      - name: Idempotence check
+        run: |
+          idempotence=$(mktemp)
+          ansible-playbook site.yml | tee -a "${idempotence}"
+          tail "${idempotence}" | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
