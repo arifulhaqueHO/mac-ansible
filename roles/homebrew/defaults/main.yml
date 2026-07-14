@@ -60,6 +60,7 @@ homebrew_formulae:
   security:
     - gnupg
     - pinentry-mac
+    - restic
   tooling:
     - cocoapods
     - llvm
@@ -68,12 +69,47 @@ homebrew_formulae:
 
 homebrew_casks:
   development:
+    - aws-vault
+    - aws-vault-binary
+    - chromedriver
     - docker
+    - docker-desktop
+    - flutter
+    - github
+    - insomnia
+    - jetbrains-toolbox
     - visual-studio-code
   productivity:
+    - alfred
+    - alt-tab
+    - flycut
+    - obsidian
+    - rectangle
     - raycast
+    - trilium-notes
+    - wallspace
   terminal:
     - iterm2
+    - termius
+  browsers:
+    - google-chrome
+  design:
+    - affinity
+    - blender
+    - krita
+  media:
+    - calibre
+    - obs
+    - vlc
+  remote_access:
+    - amazon-workspaces
+    - aws-vpn-client
+    - tunnelblick
+  documentation:
+    - mactex
+  virtualization:
+    - utm
+    - vagrant
   fonts:
     - font-hack-nerd-font
 
