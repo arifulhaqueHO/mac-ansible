@@ -7,6 +7,9 @@ name: CI
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: Validate Ansible project
