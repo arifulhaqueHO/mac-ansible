@@ -6,13 +6,64 @@ homebrew_taps:
 
 homebrew_formulae:
   cli:
+    - aspell
+    - cbonsai
+    - eza
+    - fx
+    - fzf
+    - gh
     - git
+    - glow
+    - gnu-typist
+    - gum
+    - jq
     - mas
+    - nnn
+    - ripgrep
+    - starship
+    - thefuck
+    - tmux
+    - tty-clock
+    - wget
+    - xplr
+    - yazi
+    - zellij
+    - zoxide
+  cloud_devops:
+    - act
+    - ansible
+    - aws-sam-cli
+    - awscli
+    - dependabot
+    - helm
+    - lazydocker
+    - lazygit
+    - scorecard
+    - tflint
+    - tfsec
+    - trivy
+    - trufflehog
   runtimes:
+    - go
+    - gopls
     - node
+    - nvm
     - pyenv
     - python@3.12
+    - python-lsp-server
+    - rustup
+    - ty
+    - typescript-language-server
+  editors:
+    - helix
+    - neovim
+  security:
+    - gnupg
+    - pinentry-mac
   tooling:
+    - cocoapods
+    - llvm
+    - plantuml
     - watchman
 
 homebrew_casks:
