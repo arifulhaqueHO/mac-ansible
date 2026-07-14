@@ -1,0 +1,59 @@
+---
+macos_homebrew_taps:
+  - homebrew/cask
+  - homebrew/cask-fonts
+  - homebrew/services
+
+macos_homebrew_formulae:
+  - git
+  - mas
+  - node
+  - pyenv
+  - python@3.12
+  - watchman
+
+macos_homebrew_casks:
+  - docker
+  - font-hack-nerd-font
+  - iterm2
+  - raycast
+  - visual-studio-code
+
+macos_mas_apps: []
+# Example:
+# macos_mas_apps:
+#   - id: 497799835
+#     name: Xcode
+
+macos_defaults_global:
+  - key: AppleShowAllExtensions
+    type: bool
+    value: true
+  - key: InitialKeyRepeat
+    type: int
+    value: 15
+  - key: KeyRepeat
+    type: int
+    value: 2
+
+macos_defaults_finder:
+  - key: AppleShowAllFiles
+    type: bool
+    value: true
+  - key: FXEnableExtensionChangeWarning
+    type: bool
+    value: false
+  - key: ShowPathbar
+    type: bool
+    value: true
+  - key: ShowStatusBar
+    type: bool
+    value: true
+
+macos_defaults_dock:
+  - key: autohide
+    type: bool
+    value: true
+  - key: mru-spaces
+    type: bool
+    value: false

@@ -1,0 +1,16 @@
+---
+- name: Configure a developer MacBook
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  roles:
+    - role: bootstrap
+      tags:
+        - bootstrap
+    - role: homebrew
+      tags:
+        - homebrew
+    - role: macos
+      tags:
+        - macos

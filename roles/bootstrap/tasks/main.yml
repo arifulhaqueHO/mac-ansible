@@ -1,0 +1,37 @@
+---
+- name: Check for Xcode Command Line Tools
+  ansible.builtin.command: xcode-select -p
+  register: xcode_select
+  changed_when: false
+  failed_when: false
+
+- name: Install Xcode Command Line Tools
+  ansible.builtin.shell: |
+    set -euo pipefail
+    touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    product="$(softwareupdate -l | awk -F'*' '/\*.*Command Line Tools/ {gsub(/^ Label: /, "", $2); gsub(/^ +/, "", $2); print $2; exit}')"
+    if [[ -z "$product" ]]; then
+      rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+      echo "No Command Line Tools package is currently advertised by softwareupdate." >&2
+      exit 1
+    fi
+    softwareupdate -i "$product" --verbose
+    rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  args:
+    executable: /bin/bash
+    creates: /Library/Developer/CommandLineTools/usr/bin/git
+  become: true
+  when: xcode_select.rc != 0
+
+- name: Check for Rosetta 2 on Apple Silicon
+  ansible.builtin.stat:
+    path: /Library/Apple/usr/libexec/oah/libRosettaRuntime
+  register: rosetta_runtime
+  when: ansible_facts.architecture == 'arm64'
+
+- name: Install Rosetta 2 on Apple Silicon
+  ansible.builtin.command: /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+  become: true
+  when:
+    - ansible_facts.architecture == 'arm64'
+    - not rosetta_runtime.stat.exists

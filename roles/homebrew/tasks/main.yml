@@ -1,0 +1,52 @@
+---
+- name: Set Homebrew prefix
+  ansible.builtin.set_fact:
+    macos_homebrew_prefix: "{{ '/opt/homebrew' if ansible_facts.architecture == 'arm64' else '/usr/local' }}"
+
+- name: Check whether Homebrew is installed
+  ansible.builtin.stat:
+    path: "{{ macos_homebrew_prefix }}/bin/brew"
+  register: homebrew_binary
+
+- name: Install Homebrew
+  ansible.builtin.shell: |
+    set -euo pipefail
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    executable: /bin/bash
+  when: not homebrew_binary.stat.exists
+
+- name: Install Homebrew taps
+  community.general.homebrew_tap:
+    name: "{{ macos_homebrew_taps }}"
+    state: present
+  environment:
+    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    HOMEBREW_NO_AUTO_UPDATE: '1'
+
+- name: Install Homebrew formulae
+  community.general.homebrew:
+    name: "{{ macos_homebrew_formulae }}"
+    state: present
+    update_homebrew: true
+  environment:
+    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    HOMEBREW_NO_AUTO_UPDATE: '1'
+
+- name: Install Homebrew casks
+  community.general.homebrew_cask:
+    name: "{{ macos_homebrew_casks }}"
+    state: present
+    accept_external_apps: true
+  environment:
+    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    HOMEBREW_NO_AUTO_UPDATE: '1'
+
+- name: Install Mac App Store applications
+  community.general.mas:
+    id: "{{ item.id }}"
+    state: present
+  loop: "{{ macos_mas_apps }}"
+  when: macos_mas_apps | length > 0
+  environment:
+    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
