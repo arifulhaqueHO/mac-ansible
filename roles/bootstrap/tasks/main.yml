@@ -1,7 +1,7 @@
 ---
 - name: Check for Xcode Command Line Tools
   ansible.builtin.command: xcode-select -p
-  register: xcode_select
+  register: bootstrap_xcode_select
   changed_when: false
   failed_when: false
 
@@ -22,12 +22,12 @@
     creates: /Library/Developer/CommandLineTools/usr/bin/git
   become: true
   changed_when: true
-  when: xcode_select.rc != 0
+  when: bootstrap_xcode_select.rc != 0
 
 - name: Check for Rosetta 2 on Apple Silicon
   ansible.builtin.stat:
     path: /Library/Apple/usr/libexec/oah/libRosettaRuntime
-  register: rosetta_runtime
+  register: bootstrap_rosetta_runtime
   when: ansible_facts.architecture == 'arm64'
 
 - name: Install Rosetta 2 on Apple Silicon
@@ -36,4 +36,4 @@
   changed_when: true
   when:
     - ansible_facts.architecture == 'arm64'
-    - not rosetta_runtime.stat.exists
+    - not bootstrap_rosetta_runtime.stat.exists
