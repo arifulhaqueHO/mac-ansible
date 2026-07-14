@@ -11,6 +11,3 @@
     - role: homebrew
       tags:
         - homebrew
-    - role: macos
-      tags:
-        - macos

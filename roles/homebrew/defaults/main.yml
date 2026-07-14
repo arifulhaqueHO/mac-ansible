@@ -1,0 +1,33 @@
+---
+homebrew_taps:
+  - homebrew/cask
+  - homebrew/cask-fonts
+  - homebrew/services
+
+homebrew_formulae:
+  cli:
+    - git
+    - mas
+  runtimes:
+    - node
+    - pyenv
+    - python@3.12
+  tooling:
+    - watchman
+
+homebrew_casks:
+  development:
+    - docker
+    - visual-studio-code
+  productivity:
+    - raycast
+  terminal:
+    - iterm2
+  fonts:
+    - font-hack-nerd-font
+
+homebrew_mas_apps: []
+# Example:
+# homebrew_mas_apps:
+#   - id: 497799835
+#     name: Xcode

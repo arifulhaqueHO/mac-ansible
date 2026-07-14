@@ -1,11 +1,13 @@
 ---
 - name: Set Homebrew prefix
   ansible.builtin.set_fact:
-    macos_homebrew_prefix: "{{ '/opt/homebrew' if ansible_facts.architecture == 'arm64' else '/usr/local' }}"
+    homebrew_prefix: "{{ '/opt/homebrew' if ansible_facts.architecture == 'arm64' else '/usr/local' }}"
+    homebrew_formulae_packages: "{{ homebrew_formulae.values() | flatten }}"
+    homebrew_cask_packages: "{{ homebrew_casks.values() | flatten }}"
 
 - name: Check whether Homebrew is installed
   ansible.builtin.stat:
-    path: "{{ macos_homebrew_prefix }}/bin/brew"
+    path: "{{ homebrew_prefix }}/bin/brew"
   register: homebrew_binary
 
 - name: Install Homebrew
@@ -19,35 +21,35 @@
 
 - name: Install Homebrew taps
   community.general.homebrew_tap:
-    name: "{{ macos_homebrew_taps }}"
+    name: "{{ homebrew_taps }}"
     state: present
   environment:
-    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH: "{{ homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     HOMEBREW_NO_AUTO_UPDATE: '1'
 
 - name: Install Homebrew formulae
   community.general.homebrew:
-    name: "{{ macos_homebrew_formulae }}"
+    name: "{{ homebrew_formulae_packages }}"
     state: present
     update_homebrew: true
   environment:
-    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH: "{{ homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     HOMEBREW_NO_AUTO_UPDATE: '1'
 
 - name: Install Homebrew casks
   community.general.homebrew_cask:
-    name: "{{ macos_homebrew_casks }}"
+    name: "{{ homebrew_cask_packages }}"
     state: present
     accept_external_apps: true
   environment:
-    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH: "{{ homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     HOMEBREW_NO_AUTO_UPDATE: '1'
 
 - name: Install Mac App Store applications
   community.general.mas:
     id: "{{ item.id }}"
     state: present
-  loop: "{{ macos_mas_apps }}"
-  when: macos_mas_apps | length > 0
+  loop: "{{ homebrew_mas_apps }}"
+  when: homebrew_mas_apps | length > 0
   environment:
-    PATH: "{{ macos_homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH: "{{ homebrew_prefix }}/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"

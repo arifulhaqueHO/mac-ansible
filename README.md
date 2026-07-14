@@ -7,17 +7,14 @@ An Ansible project for provisioning a developer MacBook from a fresh macOS insta
 - installs Xcode Command Line Tools when they are missing
 - installs Rosetta 2 on Apple Silicon Macs
 - installs Xcode Command Line Tools and Homebrew
-- installs a curated set of developer CLI tools and desktop apps
-- applies a small set of macOS defaults for Finder, Dock, and global preferences
+- installs grouped developer CLI tools and desktop apps
 
 ## Repository layout
 
 - `site.yml` — main entrypoint for local provisioning
 - `inventories/local/hosts.yml` — localhost inventory
-- `inventories/local/group_vars/all.yml` — packages, apps, and macOS settings to customize
 - `roles/bootstrap` — first-run setup for a brand new Mac
-- `roles/homebrew` — Homebrew taps, formulae, casks, and App Store apps
-- `roles/macos` — macOS defaults
+- `roles/homebrew` — Homebrew taps, grouped packages, and App Store apps
 - `requirements.yml` — required Ansible collections
 - `bootstrap.sh` — helper for getting Ansible onto a fresh machine before the playbook runs
 
@@ -33,13 +30,12 @@ The bootstrap script installs Xcode Command Line Tools and Homebrew if needed, i
 
 ## Customization
 
-Edit `/home/runner/work/mac-ansible/mac-ansible/inventories/local/group_vars/all.yml` to tailor the machine setup:
+Edit `/home/runner/work/mac-ansible/mac-ansible/roles/homebrew/defaults/main.yml` to tailor the machine setup:
 
-- `macos_homebrew_formulae` for CLI packages
-- `macos_homebrew_casks` for GUI applications
-- `macos_homebrew_taps` for additional taps
-- `macos_mas_apps` for Mac App Store applications
-- `macos_defaults_global`, `macos_defaults_finder`, and `macos_defaults_dock` for macOS preferences
+- `homebrew_formulae` for grouped CLI packages
+- `homebrew_casks` for grouped GUI applications
+- `homebrew_taps` for additional taps
+- `homebrew_mas_apps` for Mac App Store applications
 
 ## Running the playbook directly
 
