@@ -1,0 +1,50 @@
+name: Bootstrap macOS CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  bootstrap-and-idempotency:
+    name: Bootstrap + Idempotency (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-15
+          - macos-latest
+
+    env:
+      CI_ANSIBLE_TOGGLES: >-
+        {
+          "homebrew_update_before_install": false,
+          "homebrew_upgrade_all": false,
+          "homebrew_cleanup_after_install": false
+        }
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: First run via bootstrap script
+        run: |
+          chmod +x bootstrap.sh
+          bash bootstrap.sh --extra-vars "$CI_ANSIBLE_TOGGLES"
+
+      - name: Second run for idempotency check
+        run: |
+          ansible-playbook -i inventories/production/hosts.yml site.yml \
+            --extra-vars "$CI_ANSIBLE_TOGGLES" | tee second-run.log
+
+      - name: Assert idempotency from recap
+        run: |
+          if ! grep -Eq 'changed=0[[:space:]]+unreachable=0[[:space:]]+failed=0' second-run.log; then
+            echo "Idempotency check failed: second run reported changes or failures."
+            echo "--- second-run.log ---"
+            cat second-run.log
+            exit 1
+          fi

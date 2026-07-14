@@ -1,0 +1,4 @@
+---
+# Host-specific overrides for localhost can be added here.
+# Example:
+# homebrew_upgrade_all: true

@@ -1,0 +1,2 @@
+---
+# Keep role vars minimal. Prefer inventory/group_vars for environment-specific data.
