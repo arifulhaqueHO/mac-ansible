@@ -1,0 +1,5 @@
+---
+profile: basic
+offline: true
+exclude_paths:
+  - collections/

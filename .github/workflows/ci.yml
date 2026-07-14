@@ -1,0 +1,43 @@
+---
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate Ansible project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core ansible-lint yamllint
+
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r requirements.yml
+
+      - name: Lint YAML
+        run: yamllint .
+
+      - name: Lint Ansible content
+        run: ansible-lint
+
+      - name: Check bootstrap script syntax
+        run: bash -n bootstrap.sh
+
+      - name: Check playbook syntax
+        run: ansible-playbook --syntax-check site.yml

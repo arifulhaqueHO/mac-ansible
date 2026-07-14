@@ -14,6 +14,7 @@
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   args:
     executable: /bin/bash
+  changed_when: true
   when: not homebrew_binary.stat.exists
 
 - name: Install Homebrew taps

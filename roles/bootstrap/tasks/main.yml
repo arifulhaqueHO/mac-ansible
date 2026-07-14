@@ -21,6 +21,7 @@
     executable: /bin/bash
     creates: /Library/Developer/CommandLineTools/usr/bin/git
   become: true
+  changed_when: true
   when: xcode_select.rc != 0
 
 - name: Check for Rosetta 2 on Apple Silicon
@@ -32,6 +33,7 @@
 - name: Install Rosetta 2 on Apple Silicon
   ansible.builtin.command: /usr/sbin/softwareupdate --install-rosetta --agree-to-license
   become: true
+  changed_when: true
   when:
     - ansible_facts.architecture == 'arm64'
     - not rosetta_runtime.stat.exists

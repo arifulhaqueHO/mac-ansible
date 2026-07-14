@@ -50,6 +50,15 @@ ansible-galaxy collection install -r requirements.yml
 ansible-playbook site.yml --ask-become-pass
 ```
 
+## Automated validation
+
+GitHub Actions runs automated validation for pull requests and pushes to `main`:
+
+- `yamllint .`
+- `ansible-lint`
+- `bash -n bootstrap.sh`
+- `ansible-playbook --syntax-check site.yml`
+
 ## Notes
 
 - The playbook is designed for `localhost` and uses a local connection.
