@@ -10,13 +10,13 @@ if ! xcode-select -p >/dev/null 2>&1; then
   PRODUCT="$(softwareupdate -l | awk -F'*' '/\*.*Command Line Tools/ {gsub(/^ Label: /, "", $2); gsub(/^ +/, "", $2); print $2; exit}')"
 
   if [[ -z "$PRODUCT" ]]; then
-    rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
     echo "Unable to locate a Command Line Tools package from softwareupdate." >&2
     exit 1
   fi
 
   sudo softwareupdate -i "$PRODUCT" --verbose
-  rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  sudo rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
 fi
 
 if [[ -x /opt/homebrew/bin/brew ]]; then
