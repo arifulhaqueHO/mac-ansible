@@ -6,7 +6,7 @@ An Ansible project for provisioning a developer MacBook from a fresh macOS insta
 
 - installs Xcode Command Line Tools when they are missing
 - installs Rosetta 2 on Apple Silicon Macs
-- installs Homebrew
+- installs Xcode Command Line Tools and Homebrew
 - installs a curated set of developer CLI tools and desktop apps
 - applies a small set of macOS defaults for Finder, Dock, and global preferences
 
@@ -29,7 +29,7 @@ Run the bootstrap helper on a brand new Mac after cloning this repository:
 ./bootstrap.sh
 ```
 
-The bootstrap script installs Homebrew if needed, installs Ansible, installs the required Ansible collection, and then runs the playbook locally.
+The bootstrap script installs Xcode Command Line Tools and Homebrew if needed, installs Ansible, installs the required Ansible collection, and then runs the playbook locally.
 
 ## Customization
 
