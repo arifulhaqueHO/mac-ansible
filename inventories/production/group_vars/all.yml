@@ -120,7 +120,6 @@ homebrew_cask_groups:
     - blender
     - calibre
     - krita
-    - mactex
     - obs
     - vlc
 
