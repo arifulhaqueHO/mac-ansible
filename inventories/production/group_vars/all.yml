@@ -9,14 +9,12 @@ homebrew_cleanup_after_install: false
 
 # Add extra taps here when needed by your tooling ecosystem.
 homebrew_taps:
-  - aquasecurity/tap
   - homebrew/cask
   - hashicorp/tap
   - terraform-linters/tap
 
 # Homebrew requires explicit trust for third-party taps on newer releases.
 homebrew_trusted_taps:
-  - aquasecurity/tap
   - hashicorp/tap
   - terraform-linters/tap
 
@@ -42,7 +40,7 @@ homebrew_formulae_groups:
     - plantuml
     - ripgrep
     - terraform
-    - aquasecurity/tap/tfsec
+    - tfsec
     - terraform-linters/tap/tflint
     - thefuck
     - tree
