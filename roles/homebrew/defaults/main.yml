@@ -2,6 +2,7 @@
 # Defaults are intentionally empty because primary settings live in inventory group_vars.
 # Keep this file for role-level extensibility and future overrides.
 homebrew_taps: []
+homebrew_trusted_taps: []
 homebrew_formulae: []
 homebrew_casks: []
 homebrew_update_before_install: true

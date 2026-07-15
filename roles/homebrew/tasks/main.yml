@@ -84,6 +84,17 @@
     - brew
     - brew_taps
 
+- name: Trust configured third-party Homebrew taps
+  ansible.builtin.command: "{{ homebrew_brew_bin }} trust {{ item }}"
+  loop: "{{ homebrew_trusted_taps }}"
+  when: homebrew_trusted_taps | length > 0
+  changed_when: false
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+  tags:
+    - brew
+    - brew_taps
+
 - name: Update Homebrew metadata before package installs
   community.general.homebrew:
     update_homebrew: true

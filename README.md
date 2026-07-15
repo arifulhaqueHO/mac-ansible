@@ -110,6 +110,7 @@ Useful tag filters:
 Primary variables live in inventories/production/group_vars/all.yml:
 
 - homebrew_taps
+- homebrew_trusted_taps
 - homebrew_formulae_groups
 - homebrew_formulae
 - homebrew_cask_groups
