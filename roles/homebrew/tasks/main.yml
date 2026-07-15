@@ -2,7 +2,7 @@
 - name: Verify target OS is macOS
   ansible.builtin.assert:
     that:
-      - ansible_system == 'Darwin'
+      - ansible_facts['system'] == 'Darwin'
     fail_msg: This role supports only macOS hosts.
     success_msg: macOS host detected.
   tags:
@@ -11,9 +11,9 @@
 - name: Verify macOS version is 15 or later
   ansible.builtin.assert:
     that:
-      - ansible_distribution_major_version is version(homebrew_min_macos_major_version, '>=')
+      - ansible_facts['distribution_major_version'] is version(homebrew_min_macos_major_version, '>=')
     fail_msg: >-
-      Unsupported macOS version {{ ansible_distribution_major_version }}.
+      Unsupported macOS version {{ ansible_facts['distribution_major_version'] }}.
       This role supports {{ homebrew_min_macos_major_version }}+.
     success_msg: macOS version is supported.
   tags:
@@ -42,7 +42,7 @@
 
 - name: Set Homebrew prefix by architecture
   ansible.builtin.set_fact:
-    homebrew_prefix: "{{ '/opt/homebrew' if ansible_architecture in ['arm64', 'aarch64'] else '/usr/local' }}"
+    homebrew_prefix: "{{ '/opt/homebrew' if ansible_facts['architecture'] in ['arm64', 'aarch64'] else '/usr/local' }}"
   tags:
     - brew
     - brew_install
@@ -79,7 +79,7 @@
   loop: "{{ homebrew_taps }}"
   when: homebrew_taps | length > 0
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_taps
@@ -90,7 +90,7 @@
   when: homebrew_trusted_taps | length > 0
   changed_when: false
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_taps
@@ -100,7 +100,7 @@
     update_homebrew: true
   when: homebrew_update_before_install | bool
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_upgrade
@@ -110,7 +110,7 @@
     upgrade_all: true
   when: homebrew_upgrade_all | bool
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_upgrade
@@ -121,7 +121,7 @@
     state: present
   when: homebrew_formulae | length > 0
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_formulas
@@ -132,7 +132,7 @@
     state: present
   when: homebrew_casks | length > 0
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_casks
@@ -142,7 +142,7 @@
   when: homebrew_cleanup_after_install | bool
   changed_when: false
   environment:
-    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:
     - brew
     - brew_upgrade
