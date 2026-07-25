@@ -72,12 +72,19 @@
   tags:
     - brew
 
+- name: Build effective Homebrew tap list
+  ansible.builtin.set_fact:
+    homebrew_taps_effective: "{{ homebrew_taps | difference(homebrew_builtin_taps_to_skip | default([])) }}"
+  tags:
+    - brew
+    - brew_taps
+
 - name: Ensure requested Homebrew taps are configured
   community.general.homebrew_tap:
     name: "{{ item }}"
     state: present
-  loop: "{{ homebrew_taps }}"
-  when: homebrew_taps | length > 0
+  loop: "{{ homebrew_taps_effective }}"
+  when: homebrew_taps_effective | length > 0
   environment:
     PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
   tags:

@@ -9,7 +9,6 @@ homebrew_cleanup_after_install: false
 
 # Add extra taps here when needed by your tooling ecosystem.
 homebrew_taps:
-  - homebrew/cask
   - hashicorp/tap
   - terraform-linters/tap
 
