@@ -1,0 +1,140 @@
+---
+# Minimum supported major macOS version. Sequoia is 15.
+homebrew_min_macos_major_version: "15"
+
+# Safety toggles for package management behavior.
+homebrew_update_before_install: true
+homebrew_upgrade_all: false
+homebrew_cleanup_after_install: false
+
+# Add extra taps here when needed by your tooling ecosystem.
+homebrew_taps:
+  - hashicorp/tap
+  - terraform-linters/tap
+
+# Homebrew requires explicit trust for third-party taps on newer releases.
+homebrew_trusted_taps:
+  - hashicorp/tap
+  - terraform-linters/tap
+
+# CLI packages installed via Homebrew formulas, grouped by function.
+homebrew_formulae_groups:
+  cli_tools:
+    - act
+    - ansible
+    - aws-sam-cli
+    - awscli
+    - cocoapods
+    - curl
+    - dependabot
+    - docker
+    - eza
+    - fx
+    - fzf
+    - gh
+    - git
+    - helm
+    - jq
+    - kubectl
+    - plantuml
+    - ripgrep
+    - terraform
+    - tfsec
+    - terraform-linters/tap/tflint
+    - thefuck
+    - tree
+    - trivy
+    - wget
+    - yq
+    - zoxide
+
+  language_servers:
+    - gopls
+    - python-lsp-server
+    - ty
+    - typescript-language-server
+
+  programming_languages:
+    - go
+    - llvm
+    - node
+    - nvm
+    - pyenv
+    - python
+    - rust
+    - rustup
+
+  tuis:
+    - cbonsai
+    - glow
+    - gnu-typist
+    - gum
+    - helix
+    - lazydocker
+    - lazygit
+    - neovim
+    - nnn
+    - tmux
+    - tty-clock
+    - xplr
+    - yazi
+    - zellij
+
+  utilities:
+    - aspell
+    - gnupg
+    - pinentry-mac
+    - starship
+
+# Flatten grouped formulae into the list consumed by the role.
+homebrew_formulae: "{{ homebrew_formulae_groups | dict2items | map(attribute='value') | flatten | unique | sort }}"
+
+# Desktop applications installed via Homebrew casks, grouped by function.
+homebrew_cask_groups:
+  browsers_and_web:
+    - google-chrome
+
+  communication_and_collaboration:
+    - amazon-workspaces
+    - github
+    - notion
+    - slack
+    - trilium-notes
+
+  developer_apps:
+    - chromedriver
+    - docker
+    - docker-desktop
+    - flutter
+    - insomnia
+    - iterm2
+    - jetbrains-toolbox
+    - termius
+    - vagrant
+    - visual-studio-code
+
+  media_and_creative:
+    - affinity
+    - anki
+    - blender
+    - calibre
+    - krita
+    - obs
+    - vlc
+
+  security_network_virtualization:
+    - aws-vault
+    - aws-vault-binary
+    - aws-vpn-client
+    - tunnelblick
+    - utm
+
+  system_utilities:
+    - alfred
+    - alt-tab
+    - flycut
+    - rectangle
+    - wallspace
+
+# Flatten grouped casks into the list consumed by the role.
+homebrew_casks: "{{ homebrew_cask_groups | dict2items | map(attribute='value') | flatten | unique | sort }}"

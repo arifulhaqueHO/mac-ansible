@@ -1,0 +1,155 @@
+---
+- name: Verify target OS is macOS
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['system'] == 'Darwin'
+    fail_msg: This role supports only macOS hosts.
+    success_msg: macOS host detected.
+  tags:
+    - brew
+
+- name: Verify macOS version is 15 or later
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['distribution_major_version'] is version(homebrew_min_macos_major_version, '>=')
+    fail_msg: >-
+      Unsupported macOS version {{ ansible_facts['distribution_major_version'] }}.
+      This role supports {{ homebrew_min_macos_major_version }}+.
+    success_msg: macOS version is supported.
+  tags:
+    - brew
+
+- name: Check whether Xcode Command Line Tools are installed
+  ansible.builtin.command: xcode-select -p
+  register: xcode_clt_check
+  changed_when: false
+  failed_when: false
+  tags:
+    - brew
+    - brew_install
+
+- name: Fail when Xcode Command Line Tools are missing
+  ansible.builtin.assert:
+    that:
+      - xcode_clt_check.rc == 0
+    fail_msg: >-
+      Xcode Command Line Tools are required before Homebrew can be installed.
+      Run 'xcode-select --install', complete the installation, and rerun this playbook.
+    success_msg: Xcode Command Line Tools are installed.
+  tags:
+    - brew
+    - brew_install
+
+- name: Set Homebrew prefix by architecture
+  ansible.builtin.set_fact:
+    homebrew_prefix: "{{ '/opt/homebrew' if ansible_facts['architecture'] in ['arm64', 'aarch64'] else '/usr/local' }}"
+  tags:
+    - brew
+    - brew_install
+
+- name: Check whether Homebrew is already installed
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/bin/brew"
+  register: homebrew_binary_stat
+  tags:
+    - brew
+    - brew_install
+
+- name: Install Homebrew when missing
+  ansible.builtin.shell: |
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: "{{ homebrew_prefix }}/bin/brew"
+  when: not homebrew_binary_stat.stat.exists
+  changed_when: not homebrew_binary_stat.stat.exists
+  tags:
+    - brew
+    - brew_install
+
+- name: Set Homebrew binary path fact
+  ansible.builtin.set_fact:
+    homebrew_brew_bin: "{{ homebrew_prefix }}/bin/brew"
+  tags:
+    - brew
+
+- name: Build effective Homebrew tap list
+  ansible.builtin.set_fact:
+    homebrew_taps_effective: "{{ homebrew_taps | difference(homebrew_builtin_taps_to_skip | default([])) }}"
+  tags:
+    - brew
+    - brew_taps
+
+- name: Ensure requested Homebrew taps are configured
+  community.general.homebrew_tap:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ homebrew_taps_effective }}"
+  when: homebrew_taps_effective | length > 0
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_taps
+
+- name: Trust configured third-party Homebrew taps
+  ansible.builtin.command: "{{ homebrew_brew_bin }} trust {{ item }}"
+  loop: "{{ homebrew_trusted_taps }}"
+  when: homebrew_trusted_taps | length > 0
+  changed_when: false
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_taps
+
+- name: Update Homebrew metadata before package installs
+  community.general.homebrew:
+    update_homebrew: true
+  when: homebrew_update_before_install | bool
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_upgrade
+
+- name: Optionally upgrade all installed Homebrew packages
+  community.general.homebrew:
+    upgrade_all: true
+  when: homebrew_upgrade_all | bool
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_upgrade
+
+- name: Install Homebrew formulas
+  community.general.homebrew:
+    name: "{{ homebrew_formulae }}"
+    state: present
+  when: homebrew_formulae | length > 0
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_formulas
+
+- name: Install Homebrew casks
+  community.general.homebrew_cask:
+    name: "{{ homebrew_casks }}"
+    state: present
+  when: homebrew_casks | length > 0
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_casks
+
+- name: Optionally clean up outdated Homebrew downloads
+  ansible.builtin.command: "{{ homebrew_brew_bin }} cleanup"
+  when: homebrew_cleanup_after_install | bool
+  changed_when: false
+  environment:
+    PATH: "{{ homebrew_prefix }}/bin:{{ ansible_facts['env']['PATH'] }}"
+  tags:
+    - brew
+    - brew_upgrade

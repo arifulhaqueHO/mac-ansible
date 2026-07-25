@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Ansible artifacts
+*.retry
+ansible.log
+
+# Local secret files (never commit)
+.vault_pass.txt
+vault_pass.txt

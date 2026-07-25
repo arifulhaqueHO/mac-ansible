@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  role_name: homebrew
+  author: mac-ansible
+  description: Bootstrap Homebrew and install formula/cask packages for macOS hosts.
+  min_ansible_version: "2.15"
+  platforms:
+    - name: MacOSX
+      versions:
+        - all
+
+dependencies: []

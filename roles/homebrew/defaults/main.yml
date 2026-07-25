@@ -1,0 +1,15 @@
+---
+# Defaults are intentionally empty because primary settings live in inventory group_vars.
+# Keep this file for role-level extensibility and future overrides.
+homebrew_taps: []
+# Default taps in modern Homebrew should not be explicitly tapped.
+homebrew_builtin_taps_to_skip:
+  - homebrew/cask
+  - homebrew/core
+homebrew_trusted_taps: []
+homebrew_formulae: []
+homebrew_casks: []
+homebrew_update_before_install: true
+homebrew_upgrade_all: false
+homebrew_cleanup_after_install: false
+homebrew_min_macos_major_version: "15"
